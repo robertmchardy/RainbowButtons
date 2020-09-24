@@ -19,7 +19,7 @@
 
 #define NUM_BUTTONS 6
 
-uint8_t buttonKeyMap[NUM_BUTTONS] = {KEY_F19, KEY_F20, KEY_F21, KEY_F22, KEY_F23, KEY_F24};
+uint8_t buttonKeyMap[NUM_BUTTONS] = {KEY_F14, KEY_F15, KEY_F16, KEY_F17, KEY_F18, KEY_F19};
 uint8_t buttonPinMap[NUM_BUTTONS] = {2,3,4,5,6,7};
 bool keyState[NUM_BUTTONS] = {true, true, true, true, true, true};
 
@@ -48,12 +48,16 @@ void loop() {
       if (sensorVal == 0)
       {
         // Key has been pressed
+        Keyboard.press(KEY_LEFT_CTRL);
+        Keyboard.press(KEY_LEFT_SHIFT);
         Keyboard.press(buttonKeyMap[i]);
       }
       else
       {
         // Key has been released
         Keyboard.release(buttonKeyMap[i]);
+        Keyboard.release(KEY_LEFT_SHIFT);
+        Keyboard.release(KEY_LEFT_CTRL);
       }
       keyState[i] = sensorVal;
     }

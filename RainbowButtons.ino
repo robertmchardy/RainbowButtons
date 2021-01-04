@@ -12,7 +12,7 @@
   buttonKeyMap, buttonPinMap and keyState.
 
   Note: keyState values should all be initialised to true to match the pull-up value
-  
+
 */
 
 #include "Keyboard.h"
@@ -51,6 +51,10 @@ void loop() {
         Keyboard.press(KEY_LEFT_CTRL);
         Keyboard.press(KEY_LEFT_SHIFT);
         Keyboard.press(buttonKeyMap[i]);
+
+        // delay here
+        delay(100);
+
       }
       else
       {
@@ -58,6 +62,10 @@ void loop() {
         Keyboard.release(buttonKeyMap[i]);
         Keyboard.release(KEY_LEFT_SHIFT);
         Keyboard.release(KEY_LEFT_CTRL);
+
+        // delay here
+        delay(100);
+
       }
       keyState[i] = sensorVal;
     }

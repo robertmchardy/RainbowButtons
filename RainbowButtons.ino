@@ -49,11 +49,19 @@ void loop() {
       {
         // Key has been pressed
         Keyboard.press(buttonKeyMap[i]);
+
+        // delay here
+        delay(100);
+
       }
       else
       {
         // Key has been released
         Keyboard.release(buttonKeyMap[i]);
+
+        // delay here
+        delay(100);
+
       }
       keyState[i] = sensorVal;
     }

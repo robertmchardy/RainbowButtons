@@ -15,18 +15,43 @@
   
 */
 
+// **** KEYBOARD SETUP ****
+
 #include "Keyboard.h"
+#define NUM_BUTTONS 3
+uint8_t buttonKeyMap[NUM_BUTTONS] = {KEY_F19, KEY_F20, KEY_F21};
+uint8_t buttonPinMap[NUM_BUTTONS] = {2,3,4};
+bool keyState[NUM_BUTTONS] = {true, true, true};
 
-#define NUM_BUTTONS 6
 
-uint8_t buttonKeyMap[NUM_BUTTONS] = {KEY_F19, KEY_F20, KEY_F21, KEY_F22, KEY_F23, KEY_F24};
-uint8_t buttonPinMap[NUM_BUTTONS] = {2,3,4,5,6,7};
-bool keyState[NUM_BUTTONS] = {true, true, true, true, true, true};
+// **** LED SETUP ****
+
+#include <Adafruit_NeoPixel.h>
+
+// Which pin on the Arduino is connected to the NeoPixels?
+#define LED_PIN    5
+
+// How many NeoPixels are attached to the Arduino?
+#define LED_COUNT 3
+#define MIN_BRIGHTNESS 8
+uint8_t pixelBrightness[LED_COUNT] = {MIN_BRIGHTNESS, MIN_BRIGHTNESS, MIN_BRIGHTNESS};
+
+// Declare our NeoPixel strip object:
+Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+// Argument 1 = Number of pixels in NeoPixel strip
+// Argument 2 = Arduino pin number (most are valid)
+// Argument 3 = Pixel type flags, add together as needed:
+//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
+//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
+//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
+//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
 
 void setup() {
   //start serial connection
   // Serial.begin(9600);
 
+  // Set all inputs to internal pullups
   for (int i=0; i<NUM_BUTTONS; i++)
   {
     pinMode(buttonPinMap[i], INPUT_PULLUP);
@@ -34,6 +59,9 @@ void setup() {
 
   Keyboard.begin();
 
+  strip.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
+  strip.show();            // Turn OFF all pixels ASAP
+  strip.setBrightness(255); // Set BRIGHTNESS to max = 255
 }
 
 
@@ -49,6 +77,8 @@ void loop() {
       {
         // Key has been pressed
         Keyboard.press(buttonKeyMap[i]);
+
+        pixelBrightness[i] = 255;
 
         // delay here
         delay(100);
@@ -68,5 +98,18 @@ void loop() {
     //print out the value of the pushbutton
     // Serial.println(sensorVal);
 
+    if (pixelBrightness[i] > MIN_BRIGHTNESS)
+    {
+      pixelBrightness[i]--;
+    }
   }
+
+  // Set up the three buttons as Red, Green and Blue
+  strip.setPixelColor(0, strip.Color(pixelBrightness[0],0,0));
+  strip.setPixelColor(1, strip.Color(0,pixelBrightness[1],0));
+  strip.setPixelColor(2, strip.Color(0,0,pixelBrightness[2]));
+
+  strip.show();
+  delay(5);
+  
 }
